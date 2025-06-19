@@ -4,10 +4,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
+def generate_token_for_user(user):
+  token = RefreshToken.for_user(user)
+  return str(token.access_token)
+
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = ['id', 'username', 'email', 'bio', 'image']
+    fields = ['username', 'email', 'bio', 'image']
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -26,8 +30,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     return user
 
   def get_token(self, obj):
-    token = RefreshToken.for_user(obj)
-    return str(token.access_token)
+    return generate_token_for_user(obj)
 
 class LoginSerializer(serializers.ModelSerializer):
   token = serializers.SerializerMethodField(read_only=True)
@@ -49,5 +52,9 @@ class LoginSerializer(serializers.ModelSerializer):
     raise serializers.ValidationError("Invalid credentials")
 
   def get_token(self, obj):
-    token = RefreshToken.for_user(obj)
-    return str(token.access_token)
+    return generate_token_for_user(obj)
+
+class UserProfileSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = User
+    fields = ['username', 'bio', 'image']
