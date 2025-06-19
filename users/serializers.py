@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.validators import UniqueValidator
 
 User = get_user_model()
 
@@ -13,9 +14,10 @@ class UserSerializer(serializers.ModelSerializer):
     model = User
     fields = ['username', 'email', 'bio', 'image']
 
-
 class RegistrationSerializer(serializers.ModelSerializer):
   token = serializers.SerializerMethodField(read_only=True)
+  email = serializers.EmailField(required=False, validators=[UniqueValidator(queryset=User.objects.all())])
+  password = serializers.CharField(write_only=True, min_length=8)
 
   class Meta:
     model = User
@@ -58,3 +60,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = ['username', 'bio', 'image']
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+  token = serializers.SerializerMethodField(read_only=True)
+  email = serializers.EmailField(required=False, validators=[UniqueValidator(queryset=User.objects.all())])
+  password = serializers.CharField(write_only=True, min_length=8)
+
+  class Meta:
+    model = User
+    fields = ['username', 'email', 'bio', 'image', 'token']
+    read_only_fields = ['username']
+
+  def get_token(self, obj):
+    return generate_token_for_user(obj)
