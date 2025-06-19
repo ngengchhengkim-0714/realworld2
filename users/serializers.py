@@ -12,7 +12,7 @@ def generate_token_for_user(user):
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = ['username', 'email', 'bio', 'image']
+    fields = ['username', 'bio', 'image']
 
 class RegistrationSerializer(serializers.ModelSerializer):
   token = serializers.SerializerMethodField(read_only=True)
