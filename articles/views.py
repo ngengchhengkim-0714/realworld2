@@ -5,6 +5,8 @@ from realworld2.permissions import IsAuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 from .filters import ArticleFilter
+from rest_framework.response import Response
+from django.db.models import F
 
 class ArticleViewSet(viewsets.ModelViewSet):
   queryset = Article.objects.all()
@@ -15,3 +17,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
   def perform_create(self, serializer):
     serializer.save(author=self.request.user)
+
+  def retrieve(self, request, *args, **kwargs):
+    instance = self.get_object()
+    if request.user.is_authenticated:
+      Article.objects.filter(slug=instance.slug).update(views_count=F('views_count') + 1)
+      instance.refresh_from_db()
+
+    serializer = self.get_serializer(instance)
+    return Response(serializer.data)

@@ -13,8 +13,8 @@ class ArticleSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Article
-    fields = ['title', 'slug', 'description', 'body', 'author', 'tags', 'created_at', 'updated_at']
-    read_only_fields = ['author', 'created_at', 'updated_at', 'slug']
+    fields = ['title', 'slug', 'description', 'body', 'author', 'tags', 'created_at', 'updated_at', 'views_count']
+    read_only_fields = ['author', 'created_at', 'updated_at', 'slug', 'views_count']
 
   def to_internal_value(self, data):
     if 'article' in data:

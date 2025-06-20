@@ -12,6 +12,7 @@ class Article(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
   author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='articles', on_delete=models.CASCADE)
   tags = models.ManyToManyField(Tag, related_name='articles', blank=True)
+  views_count = models.PositiveIntegerField(default=0, editable=False)
 
   class Meta:
     ordering = ['-created_at']
