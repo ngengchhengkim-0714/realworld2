@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django_filters',
     'users',
     'tags',
-    'articles'
+    'articles',
+    'comments',
 ]
 
 MIDDLEWARE = [
