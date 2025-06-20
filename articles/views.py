@@ -7,6 +7,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from .filters import ArticleFilter
 from rest_framework.response import Response
 from django.db.models import F
+from article_histories.models import ArticleHistory
 
 class ArticleViewSet(viewsets.ModelViewSet):
   queryset = Article.objects.all()
@@ -26,3 +27,15 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
     serializer = self.get_serializer(instance)
     return Response(serializer.data)
+
+  def update(self, request, *args, **kwargs):
+    instance = self.get_object()
+    history = ArticleHistory.objects.create(
+      article=instance,
+      title=instance.title,
+      description=instance.description,
+      body=instance.body
+    )
+    history.tags.set(instance.tags.all())
+
+    return super().update(request, *args, **kwargs)

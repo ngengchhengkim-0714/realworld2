@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'tags',
     'articles',
     'comments',
+    'article_histories',
 ]
 
 MIDDLEWARE = [

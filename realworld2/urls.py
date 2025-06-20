@@ -23,6 +23,7 @@ from users.views import UserRegistrationView, UserLoginView, UserProfileView, Us
 from tags.views import TagViewSet
 from articles.views import ArticleViewSet
 from comments.views import CommentViewSet
+from article_histories.views import ArticleHistoryViewSet
 
 router = DefaultRouter()
 router.register(r'tags', TagViewSet, basename='tag')
@@ -39,4 +40,5 @@ urlpatterns = [
 	path('users/login/', UserLoginView.as_view(), name='user_login'),
     path('user/', UserDetailView.as_view(), name='user_update'),
     path('profiles/<str:username>/', UserProfileView.as_view(), name='user_profile'),
+    path('articles/<slug:slug>/histories/', ArticleHistoryViewSet.as_view({'get': 'list'}), name='article_histories')
 ]
